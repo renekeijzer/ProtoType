@@ -42,7 +42,6 @@ public class Block extends MovableGameComponent {
 	
 	@Override
 	public void Update() {
-		System.out.println("as");
 		
 	}
 	@Override
