@@ -7,9 +7,13 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
+import java.io.IOException;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 import Shapes.Rectangle;
 
@@ -33,16 +37,28 @@ public class Block extends MovableGameComponent {
 			"Gravel", "Spikes", "Wood", "Stone", "Ice", "Mines", "Bombs",
 			"Glass", };
 
-	public Block(Rectangle rect, int type)
+	public Block(Rectangle rectangle, int type)
 	{
-		this.rect = rect;
+		this.rect = rectangle;
 		this.BlockType = strTypes[type];
+		this.Position = this.rect.getPosition();
+		
+		try {
+			if(BlockType!="Air"){
+			texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("Assets/" + BlockType
+							+ "/tile0.png"));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		
 		
 	}
 	
 	@Override
 	public void Update() {
-		
 	}
 	@Override
 	public void Draw() {
@@ -82,6 +98,13 @@ public class Block extends MovableGameComponent {
 			e.printStackTrace();
 			System.exit(0);
 		}
+		
+	}
+	
+	
+	public String toString()
+	{
+		return "Width: " + this.Width + "\nHeight: " + this.Height + "\nTexture: " + this.texture.getImageHeight() + "\nPosition: " + this.Position + "\nBlocktype: " + this.BlockType + "\n\n"; 
 		
 	}
 }

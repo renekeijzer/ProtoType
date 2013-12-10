@@ -7,16 +7,19 @@ public class Rectangle implements Shape{
 	private Vector2f Position;
 	private int Width, Height;
 	
+	public Vector2f getPosition() 					{return Position;}
+	public void setPosition(Vector2f position) 		{Position = position;}
+
 	public Rectangle(Vector2f Pos, int width, int height)
 	{
-		this.Position = Pos;
+		this.setPosition(Pos);
 		this.Width = width;
 		this.Height = height;
 	}
 	
 	public Rectangle(int x, int y, int width, int height)
 	{
-		this.Position = new Vector2f(x,y);
+		this.setPosition(new Vector2f(x,y));
 		this.Width = width;
 		this.Height = height;
 	}

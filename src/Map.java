@@ -24,6 +24,7 @@ public class Map extends GameComponent {
 		
 	}
 	
+	@SuppressWarnings("static-access")
 	public void GenerateLevel(int level)
 	{
 		Vector2f TempPos = new Vector2f(0,0); 
@@ -40,19 +41,23 @@ public class Map extends GameComponent {
 				String[] tmp = line.split(",");
 				for(String block : tmp)
 				{
-					TempPos.x = 0;
 					String[]tmp2  = block.split(":");
 					for(int i = 0; i < Integer.parseInt(tmp2[1]); i++)
 					{
 						Block tmpBlock = new Block(new Rectangle(TempPos, Block.Width, Block.Height), Integer.parseInt(tmp2[0]));
-							System.out.println(tmpBlock);
-						//					Game.Components.add(tmpBlock);
+						//Components.add(tmpBlock);
+
+						tmpBlock = null;
+						
 						TempPos.x += Block.Width;
 					}
-					TempPos.y += Block.Height;
+					
 				}
+				TempPos.y += Block.Height;
+				TempPos.x = 0;
 			}
-			//System.out.println(Game.Components.getComponents());
+			
+			
 		}catch(IOException e)
 		{
 			e.printStackTrace();
