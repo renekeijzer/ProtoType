@@ -100,11 +100,4 @@ public class Block extends MovableGameComponent {
 		}
 		
 	}
-	
-	
-	public String toString()
-	{
-		return "Width: " + this.Width + "\nHeight: " + this.Height + "\nTexture: " + this.texture.getImageHeight() + "\nPosition: " + this.Position + "\nBlocktype: " + this.BlockType + "\n\n"; 
-		
-	}
 }

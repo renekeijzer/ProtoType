@@ -46,7 +46,7 @@ public class Map extends GameComponent {
 					for(int i = 0; i < Integer.parseInt(tmp2[1]); i++)
 					{
 						Block tmpBlock = new Block(new Rectangle(new Vector2f(Tempx, Tempy), Block.Width, Block.Height), Integer.parseInt(tmp2[0]));
-						//Components.add(tmpBlock);
+						Game.Components.add(tmpBlock);
 
 						tmpBlock = null;
 						
