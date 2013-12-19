@@ -24,23 +24,30 @@ public class Block extends MovableGameComponent {
 	private Texture texture;
 	private Vector2f Position, velocity;
 	private String BlockType;
-	private boolean AbG, isFalling;
+	private boolean grouded;
 
 	public int Width = 0, Height = 0;
 
+	
+	
+	public Vector2f getVelocity() 				{		return this.velocity;}
 	public Vector2f getPosition() 				{		return this.Position;}
 	public String getBlockType() 				{		return this.BlockType;}
+	public boolean isGrounded()					{ 		return this.grouded;}	
+	
+	public void setGrounded(boolean g)			{		this.grouded = g;}
+	public void setVelocity(Vector2f velocity) 	{		this.velocity = velocity;}
+	public void setDownwardVelocity(float y)	{		this.velocity.y = y;}
+	public void setLinearVelocity(float x)		{		this.velocity.x = x;}
 	public void setPosition(Vector2f position)  {		this.Position = position;}
 	public void setBlockType(String blockType) 	{		this.BlockType = blockType;}
-	
-	private String[] strTypes = new String[] { "Air", "Solid", "Lava", "Water", "Sand",
-			"Gravel", "Spikes", "Wood", "Stone", "Ice", "Mines", "Bombs",
-			"Glass", };
 
 	public Block(Rectangle rectangle, int type)
 	{
-		this.Width = GlobalSettings.BlockWidth;
-		this.Height = GlobalSettings.BlockHeight;
+		this.grouded = false;
+		this.velocity = new Vector2f(0,0);
+		this.Width = BlockWidth;
+		this.Height = BlockHeight;
 		this.rect = rectangle;
 		this.BlockType = strTypes[type];
 		this.Position = this.rect.getPosition();
@@ -61,6 +68,9 @@ public class Block extends MovableGameComponent {
 	
 	@Override
 	public void Update() {
+		Position.x += velocity.x;
+		Position.y += velocity.y;
+		this.rect.setPosition(Position);
 	}
 	@Override
 	public void Draw() {
@@ -101,5 +111,34 @@ public class Block extends MovableGameComponent {
 			System.exit(0);
 		}
 		
+	}
+	
+	
+	public static boolean isAffectedByGravity(String Type)
+	{
+		switch(Type)
+		{
+		case "Sand":
+		case "Gravel":
+			return true;
+		default:
+			return false;
+		
+		}
+	}
+	
+	public String toString()
+	{
+		return BlockType + " - " + Position;
+		
+	}
+	
+	public boolean intersects(Block b)
+	{
+		if(this.rect.intersect(b.rect) && b.getBlockType() != "Air")
+		{
+			return true;
+		}
+		return false;
 	}
 }

@@ -12,13 +12,11 @@ public class Game1 extends Game implements GlobalSettings{
 	
 	public Game1()
 	{
-		System.out.println(Components.getComponents());
 		do
 		{
 			glClear(GL_COLOR_BUFFER_BIT);
 			for(GameComponent Component : Components.getComponents())
 			{
-				
 				Component.Update();
 				Component.Draw();
 			}
@@ -44,7 +42,7 @@ public class Game1 extends Game implements GlobalSettings{
 	public void LoadContent() {
 		map = new Map(1);
 		map.GenerateLevel(1);
-		//Game.Components.add(map);
+		Game.Components.add(map);
 	}
 
 }
