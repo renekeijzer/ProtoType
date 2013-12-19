@@ -26,7 +26,7 @@ public class Block extends MovableGameComponent {
 	private String BlockType;
 	private boolean AbG, isFalling;
 
-	public final static int Width = 32, Height = 32;
+	public int Width = 0, Height = 0;
 
 	public Vector2f getPosition() 				{		return this.Position;}
 	public String getBlockType() 				{		return this.BlockType;}
@@ -39,6 +39,8 @@ public class Block extends MovableGameComponent {
 
 	public Block(Rectangle rectangle, int type)
 	{
+		this.Width = GlobalSettings.BlockWidth;
+		this.Height = GlobalSettings.BlockHeight;
 		this.rect = rectangle;
 		this.BlockType = strTypes[type];
 		this.Position = this.rect.getPosition();

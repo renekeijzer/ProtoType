@@ -45,16 +45,16 @@ public class Map extends GameComponent {
 					String[]tmp2  = block.split(":");
 					for(int i = 0; i < Integer.parseInt(tmp2[1]); i++)
 					{
-						Block tmpBlock = new Block(new Rectangle(new Vector2f(Tempx, Tempy), Block.Width, Block.Height), Integer.parseInt(tmp2[0]));
+						Block tmpBlock = new Block(new Rectangle(new Vector2f(Tempx, Tempy), GlobalSettings.BlockWidth, GlobalSettings.BlockHeight), Integer.parseInt(tmp2[0]));
 						Game.Components.add(tmpBlock);
 
 						tmpBlock = null;
 						
-						Tempx += Block.Width;
+						Tempx += GlobalSettings.BlockWidth;
 					}
 					
 				}
-				Tempy += Block.Height;
+				Tempy += GlobalSettings.BlockHeight;
 				Tempx = 0;
 			}
 			

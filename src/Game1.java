@@ -6,7 +6,7 @@ import Screens.GameWindow;
 import Screens.Window;
 
 
-public class Game1 extends Game{
+public class Game1 extends Game implements GlobalSettings{
 	private Map map;
 	public Components Components = new Components();
 	
