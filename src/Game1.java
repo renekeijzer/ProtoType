@@ -1,5 +1,8 @@
 import static org.lwjgl.opengl.GL11.*;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+
 import org.lwjgl.opengl.Display;
 
 import Screens.GameWindow;
@@ -43,6 +46,7 @@ public class Game1 extends Game implements GlobalSettings{
 		map = new Map(1);
 		map.GenerateLevel(1);
 		Game.Components.add(map);
+		System.out.println(Game.Components.getComponents());
 	}
 
 }

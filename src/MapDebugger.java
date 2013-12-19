@@ -30,18 +30,17 @@ public class MapDebugger {
 	
 	public void WriteMaptoLog(ArrayList<ArrayList<Block>> mapList) throws FileNotFoundException, UnsupportedEncodingException
 	{
-		String tempstr = null;
+		String tempstr = "";
 		PrintWriter writer = null;
 		writer = new PrintWriter("map_log.log", "UTF-8");
 		for(int i = 0; i < mapList.size()-1; i++ )
 		{
-			for(int y = 0; y < mapList.size()-1; y++)
+			for(int y = 0; y < mapList.get(i).size()-1; y++)
 			{	
-				System.out.println(i+"-"+y);
 				tempstr = tempstr + "["+i+","+y+"]"+mapList.get(i).get(y) + ", ";
 			}
-			tempstr = tempstr + "\r\n";
 			writer.println(tempstr);
+			tempstr = "";
 		}
 		writer.close();
 		System.exit(0);

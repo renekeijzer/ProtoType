@@ -32,23 +32,16 @@ public class Map extends GameComponent {
 						block.getVelocity().y += gravity;
 					}
 					block.setDownwardVelocity(block.getVelocity().y);
-					Block tmp = mapList.get((int) (block.getPosition().y/BlockWidth)).get((int)block.getPosition().x/BlockHeight);
-					
-					try {
-						debug.WriteMaptoLog(mapList);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					//System.out.println(block);
-					//System.out.println(block.getPosition().y/BlockWidth + " - "+block.getPosition().x/BlockHeight);
-					//System.out.println(tmp);
+					Block tmp = mapList.get((int)block.getPosition().y/BlockWidth+1).get((int)(block.getPosition().x)/BlockHeight);
+				
+					System.out.println(block);
+					System.out.println(tmp);
 					
 					if(block.intersects(tmp))
 					{
+						float endpos = tmp.getPosition().y - BlockHeight;
+						
+						block.setPosition(new Vector2f(block.getPosition().x, endpos));
 						block.setDownwardVelocity(0);
 						block.setGrounded(true);
 					}
