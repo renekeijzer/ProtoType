@@ -52,7 +52,6 @@ public class Map extends GameComponent {
 		if(!player.isGrounded())
 		{
 			Block tmp = findNextSolidBlock(player.getPosition());
-			System.out.println(tmp);
 			if(tmp != null)
 			{
 				if(player.intersects(tmp))
@@ -63,13 +62,7 @@ public class Map extends GameComponent {
 					player.setDownwardVelocity(0);
 					player.setGrounded(true);
 				}
-			}
-			else
-			{
-				
-				
-			}
-			
+			}	
 			
 		}
 		else

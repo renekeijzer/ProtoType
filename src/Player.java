@@ -16,7 +16,7 @@ import Shapes.Rectangle;
 public class Player extends MovableGameComponent implements GlobalSettings {
 	private Vector2f Position, velocity;
 	private float maxVelocity, minVelocity;
-	private boolean Grounded;
+	private boolean Grounded, jumping;
 	private Rectangle rect;
 
 	
@@ -28,8 +28,8 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 	public void setGrounded(boolean grounded) 	{		this.Grounded = grounded;}
 
 	public Player(Rectangle rect) {
-		this.minVelocity = -10;
-		this.maxVelocity = 10;
+		this.minVelocity = -7;
+		this.maxVelocity = 7;
 		this.velocity = new Vector2f(0, 0);
 		this.Position = rect.getPosition();
 		this.Grounded = false;
@@ -45,6 +45,16 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 			{
 				velocity.y += gravity;
 			}
+		}
+		else
+		{
+			jumping = false;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !jumping)
+		{
+			velocity.y = -7;
+			Grounded = false;
+			jumping = true;
 		}
 		
 		
@@ -63,7 +73,8 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 				velocity.x = velocity.x - 0.5f;
 			}
 		}
-
+		
+		rect.setPosition(Position);
 		Position.x += velocity.x;
 		Position.y += velocity.y;
 	}
