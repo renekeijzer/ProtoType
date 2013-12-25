@@ -28,8 +28,9 @@ public class Block extends MovableGameComponent {
 
 	public int Width = 0, Height = 0;
 
-	
-	
+	public int getHeight() 						{		return BlockHeight;}
+	public int getWidth() 						{		return BlockWidth;}
+	public Rectangle getRectangle()				{		return this.rect;}
 	public Vector2f getVelocity() 				{		return this.velocity;}
 	public Vector2f getPosition() 				{		return this.Position;}
 	public String getBlockType() 				{		return this.BlockType;}
@@ -126,6 +127,27 @@ public class Block extends MovableGameComponent {
 		
 		}
 	}
+	public static boolean isSolid(String Type)
+	{
+			switch(Type){
+			case "Air":
+			case "Water":
+			case "Lava":
+				return false;
+			case "Solid":
+			case "Stone":
+			case "Sand":
+			case "Gravel":
+			case "Spikes":
+			case "Wood":
+			case "Ice":
+			case "Glass":
+				return true;
+			default: 
+				return false;
+		}
+	}
+	
 	
 	public String toString()
 	{
@@ -133,6 +155,7 @@ public class Block extends MovableGameComponent {
 		
 	}
 	
+	@Override
 	public boolean intersects(Block b)
 	{
 		if(this.rect.intersect(b.rect) && b.getBlockType() != "Air")
@@ -141,4 +164,5 @@ public class Block extends MovableGameComponent {
 		}
 		return false;
 	}
+
 }

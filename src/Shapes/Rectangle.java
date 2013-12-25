@@ -7,13 +7,8 @@ public class Rectangle implements Shape {
 	private Vector2f Position;
 	private int Width, Height;
 
-	public Vector2f getPosition() {
-		return Position;
-	}
-
-	public void setPosition(Vector2f position) {
-		Position = position;
-	}
+	public Vector2f getPosition() 				{		return Position;	}
+	public void setPosition(Vector2f position) 	{		Position = position;}
 
 	public Rectangle(Vector2f Pos, int width, int height) {
 		this.setPosition(Pos);
@@ -37,7 +32,7 @@ public class Rectangle implements Shape {
 	public boolean intersect(Shape a) {
 		if (this.Position.y + this.Height > a.getPosition().y
 				|| this.Position.y > a.getPosition().y + a.getHeight()
-				|| this.Position.x + this.Height > a.getPosition().x
+				&& this.Position.x + this.Height > a.getPosition().x
 				|| this.Position.x > a.getPosition().x + a.getHeight()) {
 			return true;
 		}
@@ -55,6 +50,11 @@ public class Rectangle implements Shape {
 	public int getWidth() {
 		// TODO Auto-generated method stub
 		return Width;
+	}
+	
+	public String toString()
+	{
+		return Position.toString() + " - " + Height + " - " + Width;
 	}
 
 }

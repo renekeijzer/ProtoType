@@ -30,7 +30,7 @@ public class Game1 extends Game implements GlobalSettings{
 	
 	
 	public void Initialize() {
-		Window window = new GameWindow(840, 840);
+		Window window = new GameWindow(WindowWidth, WindowHeight);
 		glEnable(GL_BLEND);
 		glViewport(0,0, Window.getWidth(), Window.getHeight());
 		glMatrixMode(GL_MODELVIEW);
@@ -46,7 +46,6 @@ public class Game1 extends Game implements GlobalSettings{
 		map = new Map(1);
 		map.GenerateLevel(1);
 		Game.Components.add(map);
-		System.out.println(Game.Components.getComponents());
 	}
 
 }
