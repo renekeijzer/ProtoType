@@ -158,11 +158,16 @@ public class Block extends MovableGameComponent {
 	@Override
 	public boolean intersects(Block b)
 	{
+		try{
 		if(this.rect.intersect(b.rect) && b.getBlockType() != "Air")
 		{
 			return true;
 		}
+	
+	}catch(Exception ex)
+	{
+	System.out.println(ex.getMessage());	
+	}
 		return false;
 	}
-
 }

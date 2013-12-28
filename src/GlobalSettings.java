@@ -4,8 +4,8 @@ public interface GlobalSettings {
 	static int BlockHeight = 32;
 	static int WindowWidth = 840;
 	static int WindowHeight = 840;
-	static int PlayerWidth = 30;
-	static int PlayerHeight = 62;
+	static int PlayerWidth = 32;
+	static int PlayerHeight = 64;
 	
 	static float gravity = 0.3f;
 	static float maxBlockVelocity = 15;

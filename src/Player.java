@@ -17,15 +17,19 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 	private Vector2f Position, velocity;
 	private float maxVelocity, minVelocity;
 	private boolean Grounded, jumping;
+	private int Direction;
 	private Rectangle rect;
 
 	
 	public Vector2f getPosition() 				{		return this.Position;		}
-	public boolean isGrounded() 				{		return this.Grounded;			}
+	public boolean isGrounded() 				{		return this.Grounded;		}
+	public int getDirection()					{		return this.Direction;		}
 	
-	public void setDownwardVelocity(float i) 	{		this.velocity.y = i;}
-	public void setPosition(Vector2f position) 	{		this.Position = position;}
-	public void setGrounded(boolean grounded) 	{		this.Grounded = grounded;}
+	
+	public void setDownwardVelocity(float i) 	{		this.velocity.y = i;		}
+	public void setHorizontalVelocity(float i) 	{		this.velocity.x = i;		}
+	public void setPosition(Vector2f position) 	{		this.Position = position;	}
+	public void setGrounded(boolean grounded) 	{		this.Grounded = grounded;	}
 
 	public Player(Rectangle rect) {
 		this.minVelocity = -7;
@@ -61,12 +65,15 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 			if (velocity.x > minVelocity) {
 				velocity.x = velocity.x - 0.5f;
+				this.Direction = 1;
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			if (velocity.x < maxVelocity) {
 				velocity.x = velocity.x + 0.5f;
+				this.Direction = 2;
 			}
 		} else {
+			this.Direction = 0;
 			if (velocity.x < 0) {
 				velocity.x = velocity.x + 0.5f;
 			} else if (velocity.x > 0) {

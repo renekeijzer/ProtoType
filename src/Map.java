@@ -11,160 +11,202 @@ import Shapes.Rectangle;
 
 
 public class Map extends GameComponent {
-	
-	private ArrayList<ArrayList<Block>> mapList;
-	public Camera camera;
-	public Player player;
-	private float endpos;
-	
-	public Map(int level)
-	{
-		mapList = new ArrayList<ArrayList<Block>>();
-	}
-	
-	public void Update()
-	{
-		/* Block Collision detection BEGIN */
-		for(ArrayList<Block> list : mapList)
-		{
-			for(Block block : list)
-			{
-				if(Block.isAffectedByGravity(block.getBlockType()) && !block.isGrounded())
-				{	
-					if(block.getVelocity().y < maxBlockVelocity){
-						block.getVelocity().y += gravity;
-					}
-					block.setDownwardVelocity(block.getVelocity().y);
-					Block tmp = findNextSolidBlock(block.getPosition());
-					if(block.intersects(tmp))
-					{
-						endpos = tmp.getPosition().y - BlockHeight;
-						
-						block.setPosition(new Vector2f(block.getPosition().x, endpos));
-						block.setDownwardVelocity(0);
-						block.setGrounded(true);
-					}
-				}				
-			}	
-		}
-		/* Block Collision detection END */
-		/* Player Collision detection BEGIN*/
-		if(!player.isGrounded())
-		{
-			Block tmp = findNextSolidBlock(player.getPosition());
-			if(tmp != null)
-			{
-				if(player.intersects(tmp))
-				{
-					endpos = tmp.getPosition().y - player.getHeight();
-				
-					player.setPosition(new Vector2f(player.getPosition().x, endpos));
-					player.setDownwardVelocity(0);
-					player.setGrounded(true);
-				}
-			}	
-			
-		}
-		else
-		{
-			if(isFalling(player))
-			{
-				player.setGrounded(false);
-			}
-		}	
-	}	
-		/* Player Collision detection END*/
-	
-	public void GenerateLevel(int level)
-	{
-		int Tempx = 0;
-		int Tempy = 0;
-		ArrayList<Block> temprow = new ArrayList<Block>();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader("levels/level" + level + ".txt"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				String[] tmp = line.split(",");
-				temprow = new ArrayList<Block>();
-				for(String block : tmp)
-				{
-					String[]tmp2  = block.split(":");
-					for(int i = 0; i < Integer.parseInt(tmp2[1]); i++)
-					{
-						Block tmpBlock = new Block(new Rectangle(new Vector2f(Tempx, Tempy), BlockWidth, BlockHeight), Integer.parseInt(tmp2[0]));
-						Game.Components.add(tmpBlock);
-						temprow.add(tmpBlock);						
-						Tempx += BlockWidth;
-					}
-				}
-				mapList.add(temprow);
-				temprow = null;
-				Tempy += BlockHeight;
-				Tempx = 0;
-			}
-			player = new Player(new Rectangle(new Vector2f(100, 100), 30, 62));
-			camera = new Camera(player);
-			Game.Components.add(player);
-			Game.Components.add(camera);
-			
-			
-		}catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		}
-	
-	
-		public Block findNextSolidBlock(Vector2f pos){
-			for(int i = ((int)pos.y+32)/32; i < mapList.size(); i++)
-			{
-				switch(mapList.get(i).get((int)pos.x/32).getBlockType())
-				{
-				case "Air":
-				case "Water":
-				case "Lava":
-					break;
-				case "Solid":
-				case "Stone":
-				case "Sand":
-				case "Gravel":
-				case "Spikes":
-				case "Wood":
-				case "Ice":
-				case "Glass":
-					return mapList.get(i).get((int)pos.x/32);
-				}
-					
-				
-			}
-			return null;
-		}
-		
-		public boolean isFalling(MovableGameComponent comp)
-		{
-			Vector2f tmppos = comp.getPosition();
+        
+        private ArrayList<ArrayList<Block>> mapList;
+        public Camera camera;
+        public Player player;
+        private float endpos;
+        
+        public Map(int level)
+        {
+                mapList = new ArrayList<ArrayList<Block>>();
+        }
+        
+        public void Update()
+        {
+                /* Block Collision detection BEGIN */
+                for(ArrayList<Block> list : mapList)
+                {
+                        for(Block block : list)
+                        {
+                                if(Block.isAffectedByGravity(block.getBlockType()) && !block.isGrounded())
+                                {        
+                                        if(block.getVelocity().y < maxBlockVelocity){
+                                                block.getVelocity().y += gravity;
+                                        }
+                                        block.setDownwardVelocity(block.getVelocity().y);
+                                        Block tmp = findNextSolidBlock(block.getPosition());
+                                        if(block.intersects(tmp))
+                                        {
+                                                endpos = tmp.getPosition().y - BlockHeight;
+                                                
+                                                block.setPosition(new Vector2f(block.getPosition().x, endpos));
+                                                block.setDownwardVelocity(0);
+                                                block.setGrounded(true);
+                                        }
+                                }                                
+                        }        
+                }
+                /* Block Collision detection END */
+                /* Player Collision detection BEGIN*/
+                int x = (int) (player.getPosition().x / 32);
+        		int y = (int) (player.getPosition().y / 32);
+                
+                if(!player.isGrounded())
+                {
+                	Block tmp = findNextSolidBlock(player.getPosition());
+                        if(tmp != null)
+                        {
+                                if(player.intersects(mapList.get(y).get(x)) && Block.isSolid(mapList.get(y).get(x).getBlockType()))
+                                {
+                                	player.setDownwardVelocity(0.5f);
+                                }
+                                else if(player.intersects(tmp))
+                                {
+                                        endpos = tmp.getPosition().y - player.getHeight();
+                                
+                                        player.setPosition(new Vector2f(player.getPosition().x, endpos));
+                                        player.setDownwardVelocity(0);
+                                        player.setGrounded(true);
+                                }
+                                
+                                
+                        }        
+                        
+                }
+                else
+                {
+                	
+                    if(isFalling(player))
+                    {
+                                player.setGrounded(false);
+                    }
+                }
+            	
+                
+        		if(x >=  0 && y >= 0 && y < mapList.size() && x <mapList.get(1).size())
+        		{
+        		
+        			if(player.getDirection() == 1)
+        			{
+            			if(Block.isSolid(mapList.get(y).get(x).getBlockType()) && player.intersects(mapList.get(y).get(x)))
+            			{	
+      
+            				player.setHorizontalVelocity(1);
+            			}
+            			if(Block.isSolid(mapList.get(y+1).get(x).getBlockType()) && player.intersects(mapList.get(y+1).get(x)))
+            			{
+            				player.setHorizontalVelocity(1);
+            			}
+            		}else if(player.getDirection() == 2){
+            			if(Block.isSolid(mapList.get(y).get(x+1).getBlockType()) && player.intersects(mapList.get(y).get(x+1)))
+            			{	
+            				player.setHorizontalVelocity(-1);
+            			}
+            			if(Block.isSolid(mapList.get(y+1).get(x+1).getBlockType()) && player.intersects(mapList.get(y+1).get(x+1)))
+            			{
+            				player.setHorizontalVelocity(-1);
+            			}	
+            		}
+            	}
+                
+        }
+                /* Player Collision detection END*/
+        
+        public void GenerateLevel(int level)
+        {
+                int Tempx = 0;
+                int Tempy = 0;
+                ArrayList<Block> temprow = new ArrayList<Block>();
+                BufferedReader reader = null;
+                try {
+                        reader = new BufferedReader(new FileReader("levels/level" + level + ".txt"));
+                } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                }
+                String line = null;
+                try {
+                        while ((line = reader.readLine()) != null) {
+                                String[] tmp = line.split(",");
+                                temprow = new ArrayList<Block>();
+                                for(String block : tmp)
+                                {
+                                        String[]tmp2  = block.split(":");
+                                        for(int i = 0; i < Integer.parseInt(tmp2[1]); i++)
+                                        {
+                                                Block tmpBlock = new Block(new Rectangle(new Vector2f(Tempx, Tempy), BlockWidth, BlockHeight), Integer.parseInt(tmp2[0]));
+                                                Game.Components.add(tmpBlock);
+                                                temprow.add(tmpBlock);                                                
+                                                Tempx += BlockWidth;
+                                        }
+                                }
+                                mapList.add(temprow);
+                                temprow = null;
+                                Tempy += BlockHeight;
+                                Tempx = 0;
+                        }
+                        player = new Player(new Rectangle(new Vector2f(100, 100), PlayerWidth, PlayerHeight));
+                        camera = new Camera(player);
+                        Game.Components.add(player);
+                        Game.Components.add(camera);
+                        
+                        
+                }catch(IOException e)
+                	{
+                        e.printStackTrace();
+                	}
+                }
+        
+        
+                public Block findNextSolidBlock(Vector2f pos){
+                	if(((int) (pos.y / BlockHeight) + 1 < mapList.size()
+                			&& (int) (pos.x / BlockWidth) < mapList.get(0).size())
+                			&& ((int) (pos.x / BlockWidth) >= 0 
+                			&& (int) pos.y / BlockHeight >= 0)){
+                		for(int i = (int) ((pos.y / 32) + 1); i < mapList.size(); i++)
+                        {
+                                switch(mapList.get(i).get((int)pos.x/32).getBlockType())
+                                {
+                                case "Air":
+                                case "Water":
+                                case "Lava":
+                                        break;
+                                case "Solid":
+                                case "Stone":
+                                case "Sand":
+                                case "Gravel":
+                                case "Spikes":
+                                case "Wood":
+                                case "Ice":
+                                case "Glass":
+                                        return mapList.get(i).get((int)pos.x/32);
+                                }
+                        }
+                        
+                	}
+                	return null;
+                }
+                public boolean isFalling(MovableGameComponent comp)
+                {
+                        Vector2f tmppos = comp.getPosition();
 
-			int y = (int) (tmppos.y / 32);
-			int x = (int) (tmppos.x / 32);
+                        int y = (int) (tmppos.y / 32) + 2;
+                        int x = (int) (tmppos.x / 32) + 1;
 
-			if(y > mapList.size() || x > mapList.get(y).size())
-			{
-				return false;
-			}
-			
-			if(!Block.isSolid(mapList.get(y).get(x).getBlockType()))
-			{
-				return true;
-			}
-			return false;
-			
-		}
-	}
+                        if(y > mapList.size() - 1 || x > mapList.get(y).size() - 1 || y < 0|| x < 0)
+                        {
+                                return true;
+                        }
+         
+                        if(!Block.isSolid(mapList.get(y).get(x).getBlockType()))
+                        {
+                                return true;
+                        }
+                        return false;
+                        
+                }
+        }
 
 
 
+ 
