@@ -54,7 +54,9 @@ public class Map extends GameComponent {
                 
                 if(!player.isGrounded())
                 {
-                	Block tmp = findNextSolidBlock(player.getPosition());
+                	System.out.println(getNearestRightBlock(player.getPosition()));
+                	Block tmp = findNextSolidBlock(new Vector2f(player.getPosition().x, player.getPosition().y + 32));
+                	//Block tmp = findNextSolidBlock(player.getPosition());
                         if(tmp != null)
                         {
                                 if(player.intersects(mapList.get(y).get(x)) && Block.isSolid(mapList.get(y).get(x).getBlockType()))
@@ -69,52 +71,73 @@ public class Map extends GameComponent {
                                         player.setDownwardVelocity(0);
                                         player.setGrounded(true);
                                 }
-                                
-                                
-                        }        
-                        
+                        }
                 }
                 else
                 {
                 	
                     if(isFalling(player))
                     {
-                                player.setGrounded(false);
+                    	player.setGrounded(false);
                     }
                 }
             	
                 
         		if(x >=  0 && y >= 0 && y < mapList.size() && x <mapList.get(1).size())
         		{
-        		
-        			if(player.getDirection() == 1)
+        			if(player.getDirection() != 2)
         			{
             			if(Block.isSolid(mapList.get(y).get(x).getBlockType()) && player.intersects(mapList.get(y).get(x)))
-            			{	
-      
-            				player.setHorizontalVelocity(1);
+            			{
+            				player.setColided(true);
+            				player.setHorizontalVelocity(0);
             			}
+            			else
+            			{
+	            			player.setColided(false);
+            			}
+            			
             			if(Block.isSolid(mapList.get(y+1).get(x).getBlockType()) && player.intersects(mapList.get(y+1).get(x)))
             			{
-            				player.setHorizontalVelocity(1);
+            				player.setColided(true);
+            				player.setHorizontalVelocity(0);
             			}
-            		}else if(player.getDirection() == 2){
-            			if(Block.isSolid(mapList.get(y).get(x+1).getBlockType()) && player.intersects(mapList.get(y).get(x+1)))
-            			{	
-            				player.setHorizontalVelocity(-1);
-            			}
-            			if(Block.isSolid(mapList.get(y+1).get(x+1).getBlockType()) && player.intersects(mapList.get(y+1).get(x+1)))
+            			else
             			{
-            				player.setHorizontalVelocity(-1);
-            			}	
+	            			player.setColided(false);
+            			}
             		}
-            	}
-                
-        }
+        			else if(player.getDirection() != 1)
+            		{
+	            		if(Block.isSolid(mapList.get(y).get(x+1).getBlockType()) && player.intersects(mapList.get(y).get(x+1)))
+	            		{	
+	            			player.setColided(true);
+	            			player.setHorizontalVelocity(0);
+	            		}
+	            		else
+	            		{
+	            			player.setColided(false);
+	            		}
+	            		
+	            		if(Block.isSolid(mapList.get(y+1).get(x+1).getBlockType()) && player.intersects(mapList.get(y+1).get(x+1)))
+	            		{
+	            			player.setColided(true);
+	            			player.setHorizontalVelocity(0);
+	            		}else
+	            		{
+	            			player.setColided(false);	
+	            		}
+	            		
+            		}
+        			
+        		}
+        	}
                 /* Player Collision detection END*/
         
         public void GenerateLevel(int level)
         {
+        		Boolean renderMap = false;
+        		String[] blocks = null;
                 int Tempx = 0;
                 int Tempy = 0;
                 ArrayList<Block> temprow = new ArrayList<Block>();
@@ -127,42 +150,50 @@ public class Map extends GameComponent {
                 String line = null;
                 try {
                         while ((line = reader.readLine()) != null) {
-                                String[] tmp = line.split(",");
-                                temprow = new ArrayList<Block>();
-                                for(String block : tmp)
-                                {
-                                        String[]tmp2  = block.split(":");
-                                        for(int i = 0; i < Integer.parseInt(tmp2[1]); i++)
-                                        {
-                                                Block tmpBlock = new Block(new Rectangle(new Vector2f(Tempx, Tempy), BlockWidth, BlockHeight), Integer.parseInt(tmp2[0]));
-                                                Game.Components.add(tmpBlock);
-                                                temprow.add(tmpBlock);                                                
-                                                Tempx += BlockWidth;
-                                        }
-                                }
-                                mapList.add(temprow);
-                                temprow = null;
-                                Tempy += BlockHeight;
-                                Tempx = 0;
+                            if(renderMap)
+                            {
+                            	blocks = line.split(",");
+                            	for(String block : blocks)
+                            	{
+                            		Block tmpBlock = new Block(new Rectangle(Tempx, Tempy, BlockWidth, BlockHeight), Integer.parseInt(block)); 
+                            		Game.Components.add(tmpBlock);
+                            		temprow.add(tmpBlock);
+                            		Tempx += 32;	
+                            	}
+                            	
+                            	Tempx = 0;
+                            	Tempy += 32;
+                            	mapList.add(temprow);
+                            	temprow=new ArrayList<Block>();
+                            }   
+                        	
+                        	if(line.contains("data"))
+                            {
+                            	   renderMap = true;
+                            }
+                               
+                               
                         }
+                        renderMap = false;
                         player = new Player(new Rectangle(new Vector2f(100, 100), PlayerWidth, PlayerHeight));
                         camera = new Camera(player);
+                        
                         Game.Components.add(player);
                         Game.Components.add(camera);
-                        
-                        
-                }catch(IOException e)
-                	{
-                        e.printStackTrace();
-                	}
                 }
+                catch(IOException e)
+                {
+                	e.printStackTrace();
+                }
+            }
         
         
                 public Block findNextSolidBlock(Vector2f pos){
                 	if(((int) (pos.y / BlockHeight) + 1 < mapList.size()
                 			&& (int) (pos.x / BlockWidth) < mapList.get(0).size())
                 			&& ((int) (pos.x / BlockWidth) >= 0 
-                			&& (int) pos.y / BlockHeight >= 0)){
+                			&& (int) pos.y / BlockHeight >= 0))
+                	{
                 		for(int i = (int) ((pos.y / 32) + 1); i < mapList.size(); i++)
                         {
                                 switch(mapList.get(i).get((int)pos.x/32).getBlockType())
@@ -170,6 +201,22 @@ public class Map extends GameComponent {
                                 case "Air":
                                 case "Water":
                                 case "Lava":
+                                	  switch(mapList.get(i).get((int)(pos.x/32)+1).getBlockType())
+                                      {
+                                      case "Air":
+                                      case "Water":
+                                      case "Lava":                                		
+                                              break;
+                                      case "Solid":
+                                      case "Stone":
+                                      case "Sand":
+                                      case "Gravel":
+                                      case "Spikes":
+                                      case "Wood":
+                                      case "Ice":
+                                      case "Glass":
+                                              return mapList.get(i).get((int)(pos.x/32)+1);
+                                      }
                                         break;
                                 case "Solid":
                                 case "Stone":
@@ -182,10 +229,10 @@ public class Map extends GameComponent {
                                         return mapList.get(i).get((int)pos.x/32);
                                 }
                         }
-                        
                 	}
                 	return null;
                 }
+                
                 public boolean isFalling(MovableGameComponent comp)
                 {
                         Vector2f tmppos = comp.getPosition();
@@ -198,12 +245,58 @@ public class Map extends GameComponent {
                                 return true;
                         }
          
-                        if(!Block.isSolid(mapList.get(y).get(x).getBlockType()))
+                        if(!Block.isSolid(mapList.get(y).get(x).getBlockType()) &&!Block.isSolid(mapList.get(y).get(x-1).getBlockType()))
                         {
                                 return true;
                         }
                         return false;
                         
+                }
+                
+                public Block getNearestRightBlock(Vector2f pos)
+                {
+                	if(((int) (pos.y / BlockHeight) + 1 < mapList.size()
+                			&& (int) (pos.x / BlockWidth) < mapList.get(0).size())
+                			&& ((int) (pos.x / BlockWidth) >= 0 
+                			&& (int) pos.y / BlockHeight >= 0))
+                	{
+                		for(int i = (int) ((pos.x / 32) + 1); i < mapList.get((int)(pos.y/32)).size(); i++)
+                        {
+                                switch(mapList.get((int)pos.y/32).get(i).getBlockType())
+                                {
+                                case "Air":
+                                case "Water":
+                                case "Lava":
+                                	  switch(mapList.get((int)(pos.y/32) + 1).get(i).getBlockType())
+                                      {
+                                      case "Air":
+                                      case "Water":
+                                      case "Lava":                                		
+                                              break;
+                                      case "Solid":
+                                      case "Stone":
+                                      case "Sand":
+                                      case "Gravel":
+                                      case "Spikes":
+                                      case "Wood":
+                                      case "Ice":
+                                      case "Glass":
+                                              return mapList.get((int)(pos.y/32) + 1).get(i);
+                                      }
+                                        break;
+                                case "Solid":
+                                case "Stone":
+                                case "Sand":
+                                case "Gravel":
+                                case "Spikes":
+                                case "Wood":
+                                case "Ice":
+                                case "Glass":
+                                        return mapList.get((int)(pos.y/32)).get(i);
+                                }
+                        }
+                	}
+					return null;
                 }
         }
 

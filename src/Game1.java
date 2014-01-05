@@ -11,13 +11,18 @@ import Screens.Window;
 
 public class Game1 extends Game implements GlobalSettings{
 	private Map map;
-	public Components Components = new Components();
 	
 	public Game1()
 	{
 		do
 		{
 			glClear(GL_COLOR_BUFFER_BIT);
+//			for(int i = Components.getComponents().size() - 1; i > 0 ; i--)
+//			{
+//				Components.getComponents().get(i).Update();
+//				Components.getComponents().get(i).Draw();
+//			}
+			
 			for(GameComponent Component : Components.getComponents())
 			{
 				Component.Update();
@@ -43,8 +48,8 @@ public class Game1 extends Game implements GlobalSettings{
 
 	@Override
 	public void LoadContent() {
-		map = new Map(1);
-		map.GenerateLevel(1);
+		map = new Map(2);
+		map.GenerateLevel(2);
 		Game.Components.add(map);
 	}
 

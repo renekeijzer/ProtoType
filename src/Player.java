@@ -16,7 +16,7 @@ import Shapes.Rectangle;
 public class Player extends MovableGameComponent implements GlobalSettings {
 	private Vector2f Position, velocity;
 	private float maxVelocity, minVelocity;
-	private boolean Grounded, jumping;
+	private boolean Grounded, jumping, colided;
 	private int Direction;
 	private Rectangle rect;
 
@@ -24,8 +24,10 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 	public Vector2f getPosition() 				{		return this.Position;		}
 	public boolean isGrounded() 				{		return this.Grounded;		}
 	public int getDirection()					{		return this.Direction;		}
+	public Vector2f getVelocity()				{		return this.velocity;		}
 	
-	
+	public void setColided(boolean b)			{		this.colided = b;			}
+	public void setHorizontalPosition(float i)	{		this.Position.x += i;		}
 	public void setDownwardVelocity(float i) 	{		this.velocity.y = i;		}
 	public void setHorizontalVelocity(float i) 	{		this.velocity.x = i;		}
 	public void setPosition(Vector2f position) 	{		this.Position = position;	}
@@ -38,7 +40,7 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 		this.Position = rect.getPosition();
 		this.Grounded = false;
 		this.rect = rect;
-
+		this.colided = false;
 	}
 
 	@Override
@@ -61,7 +63,6 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 			jumping = true;
 		}
 		
-		
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 			if (velocity.x > minVelocity) {
 				velocity.x = velocity.x - 0.5f;
@@ -72,31 +73,41 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 				velocity.x = velocity.x + 0.5f;
 				this.Direction = 2;
 			}
-		} else {
+		} 
+		else 
+		{
 			this.Direction = 0;
-			if (velocity.x < 0) {
+			
+			if (velocity.x < 0) 
+			{
 				velocity.x = velocity.x + 0.5f;
-			} else if (velocity.x > 0) {
+			} 
+			else if (velocity.x > 0) 
+			{
 				velocity.x = velocity.x - 0.5f;
 			}
 		}
 		
-		rect.setPosition(Position);
-		Position.x += velocity.x;
+		
+		
+		if(!colided)
+		{
+			Position.x += velocity.x;
+		}
 		Position.y += velocity.y;
+		rect.setPosition(Position);
 	}
 
 	@Override
 	public void Draw() {
 		Color.white.bind();
 		glBegin(GL_QUADS);
-		glColor3f(0.5f, 0.5f, 1.0f);
-		glVertex2f(Position.x, Position.y);
-		glVertex2f(Position.x, Position.y + rect.getHeight());
-		glVertex2f(Position.x + rect.getWidth(), Position.y + rect.getHeight());
-		glVertex2f(Position.x + rect.getWidth(), Position.y);
+			glColor3f(0.5f, 0.5f, 1.0f);
+			glVertex2f(Position.x, Position.y);
+			glVertex2f(Position.x, Position.y + rect.getHeight());
+			glVertex2f(Position.x + rect.getWidth(), Position.y + rect.getHeight());
+			glVertex2f(Position.x + rect.getWidth(), Position.y);
 		glEnd();
-
 	}
 
 	@Override
@@ -122,8 +133,4 @@ public class Player extends MovableGameComponent implements GlobalSettings {
 	public int getWidth() {
 		return rect.getWidth();
 	}
-
-
-	
-
 }
